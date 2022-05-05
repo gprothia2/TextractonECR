@@ -1,0 +1,1 @@
+docker run eulereye:latest 0011.png 0011.txt 0011.json

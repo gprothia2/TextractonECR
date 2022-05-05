@@ -1,0 +1,6 @@
+ echo $1
+ export AWS_DEFAULT_REGION=us-east-1
+ python3 ./src/pipeline.py --img $1 --root .  --coords 2
+ aws s3 cp ./output/ocr_plain_text/$2 s3://ancestory-gap2/output/ocr_plain_text/$2
+ aws s3 cp ./output/ocr_coords/$2 s3://ancestory-gap2/output/ocr_coords/$2
+ aws s3 cp ./output/ocr_coords/$3 s3://ancestory-gap2/output/ocr_coords/$3

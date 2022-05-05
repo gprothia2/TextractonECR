@@ -1,0 +1,11 @@
+AAI=818250107883
+export AAI
+IMAGE=eulereye
+export IMAGE
+
+
+aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin $AAI.dkr.ecr.us-east-1.amazonaws.com    
+
+aws ecr create-repository --repository-name eulereye --image-scanning-configuration scanOnPush=true --image-tag-mutability MUTABLE
+docker tag $IMAGE:latest $AAI.dkr.ecr.us-east-1.amazonaws.com/$IMAGE:latest
+docker push $AAI.dkr.ecr.us-east-1.amazonaws.com/$IMAGE:latest 
