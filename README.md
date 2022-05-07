@@ -35,21 +35,21 @@ Configure theS3 bucket and other settings for the program
 
 - Go to directory main/EulerEye-master3/src/constants.py and change name of the S3 bucket and folder to new bucket/folder created in previous step
      
-        S3_BUCKET_NAME = 'S3xxxx'
-	S3_RAW_IMAGE_FOLDER = 'S3xxxx/input/'
-	TEXTRACT_LIMIT_SIZE = 10485760
-	FCN_MODEL = 'last_20.pth.tar'
+		S3_BUCKET_NAME = 'S3xxxx'
+		S3_RAW_IMAGE_FOLDER = 'S3xxxx/input/'
+		TEXTRACT_LIMIT_SIZE = 10485760
+		FCN_MODEL = 'last_20.pth.tar'
 
 - Go to directory main/EulerEye-master3/runscript and change name of the bucket  in Line 3 
 
-	 echo $1
-	 export AWS_DEFAULT_REGION=us-east-1
-	 bucket_name='xxx'
-	 
-	 python3 /home/ec2-user/EulerEye-master3/src/pipeline.py --img $1 --root /home/ec2-user/EulerEye-master3 --coords 2
-	 aws s3 cp /home/ec2-user/EulerEye-master3/output/ocr_plain_text/$2 s3://$bucket_name/output/ocr_plain_text/$2
-	 aws s3 cp /home/ec2-user/EulerEye-master3/output/ocr_coords/$2 s3://$bucket_name/output/ocr_coords/$2
-	 aws s3 cp /home/ec2-user/EulerEye-master3/output/ocr_coords/$3 s3://$bucket_name/output/ocr_coords/$3
+		 echo $1
+		 export AWS_DEFAULT_REGION=us-east-1
+		 bucket_name='xxx'
+
+		 python3 /home/ec2-user/EulerEye-master3/src/pipeline.py --img $1 --root /home/ec2-user/EulerEye-master3 --coords 2
+		 aws s3 cp /home/ec2-user/EulerEye-master3/output/ocr_plain_text/$2 s3://$bucket_name/output/ocr_plain_text/$2
+		 aws s3 cp /home/ec2-user/EulerEye-master3/output/ocr_coords/$2 s3://$bucket_name/output/ocr_coords/$2
+		 aws s3 cp /home/ec2-user/EulerEye-master3/output/ocr_coords/$3 s3://$bucket_name/output/ocr_coords/$3
 	 
 <b> Step 3 -  Build the docker container and load to ECR </b>
 
@@ -57,9 +57,9 @@ Configure theS3 bucket and other settings for the program
 
 - Go to file main/docker_utils/load_ecr  - chanage the name of AWS account and Image
 
-	Execute "sh build" - this will build the docer image locally
+		Execute "sh build" - this will build the docer image locally
 
-	Execurte "Sh load_ecr" - this will load the dociker image to AWS ECR
+		Execute "Sh load_ecr" - this will load the dociker image to AWS ECR
 	
 
 
@@ -146,7 +146,7 @@ Create a new lambda function that will be triggered when a new file is uploaded 
 
 <b> Step 6. Load files to S3 input folder and validate the output </b>
 
-  - Load around 10 files. Each file will invoke the Lambda function that will run the scripts and extract the  text.
+  - Load around 10 files. Each file will invoke the Lambda function that will run the Fargate tasks and extract the text.
   - Extracted file will be loaded to the output folder
   - Validate the outputs and load and process more files
 
