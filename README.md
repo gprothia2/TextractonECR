@@ -58,70 +58,70 @@ Create a new lambda function that will be triggered when a new file is uploaded 
   - Set the Trigger for Lambda function as S3 bucket and folder input created in previous step 
   - Please use the lambda code pasted below and change the  variables 
 
-import boto3
-import json 
-import random
-import time
+	import boto3
+	import json 
+	import random
+	import time
 
-client = boto3.client('ecs')
-cluster_name = << Your Fargate Cluster >>
-task_definition = << Your Task >>
-container_name = << Your container >>
-subnet_name = << Your subnet name >>
-security_group =  <<Your secuirty group>>
-  
-  
+	client = boto3.client('ecs')
+	cluster_name = << Your Fargate Cluster >>
+	task_definition = << Your Task >>
+	container_name = << Your container >>
+	subnet_name = << Your subnet name >>
+	security_group =  <<Your secuirty group>>
 
-def lambda_handler(event, context):
-    try:
-        
-   
-        lambda_message = event['Records'][0]
-        bucket = lambda_message['s3']['bucket']['name']
-        key = lambda_message['s3']['object']['key']
-        print('KEY:'+key)
-        
-        img_file =  key.split('/')[-1]
-        img_file2 = img_file.split('.')[0]+'.txt'
-        img_file3 = img_file.split('.')[0]+'.json'
-        
-        
-        response = client.run_task(
-            cluster=cluster_name,
-            launchType = 'FARGATE',
-            taskDefinition=task_definition,
-            count = 1,
-            platformVersion='LATEST',
-            overrides={
-                'containerOverrides':[{
-                    'name': container_name,
-                    'command':[img_file,img_file2,img_file3]
-                }],
-            },
-            networkConfiguration={
-                'awsvpcConfiguration': {
-                    'subnets': [
-                        subnet_name
-                    ],
-                    'securityGroups': [
-                        security_group,
-                    ],
-                    'assignPublicIp': 'ENABLED'
-                }
-            })
 
-        print(response)
 
-        return {
-            'statusCode': 200,
-            'body': "OK"
-        }
-    except Exception as e:
-        print(e)
+	def lambda_handler(event, context):
+	    try:
 
-        return {
-            'statusCode': 500,
-            'body': str(e)
-        }    
-	
+
+		lambda_message = event['Records'][0]
+		bucket = lambda_message['s3']['bucket']['name']
+		key = lambda_message['s3']['object']['key']
+		print('KEY:'+key)
+
+		img_file =  key.split('/')[-1]
+		img_file2 = img_file.split('.')[0]+'.txt'
+		img_file3 = img_file.split('.')[0]+'.json'
+
+
+		response = client.run_task(
+		    cluster=cluster_name,
+		    launchType = 'FARGATE',
+		    taskDefinition=task_definition,
+		    count = 1,
+		    platformVersion='LATEST',
+		    overrides={
+			'containerOverrides':[{
+			    'name': container_name,
+			    'command':[img_file,img_file2,img_file3]
+			}],
+		    },
+		    networkConfiguration={
+			'awsvpcConfiguration': {
+			    'subnets': [
+				subnet_name
+			    ],
+			    'securityGroups': [
+				security_group,
+			    ],
+			    'assignPublicIp': 'ENABLED'
+			}
+		    })
+
+		print(response)
+
+		return {
+		    'statusCode': 200,
+		    'body': "OK"
+		}
+	    except Exception as e:
+		print(e)
+
+		return {
+		    'statusCode': 500,
+		    'body': str(e)
+		}    
+
 	
