@@ -20,21 +20,34 @@ Key Services used
 
  Create a new bucket s3://S3xxxx and following folder structure
   
-S3xxxx
-  input 
-  output 
+	S3xxxx
+		├── input/ 
+		│     └──  0001.png
+		│     └──  0002...N.png
+		├── output/ 
+		│     ├── ocr_plain_text -> plain OCR results as text file. (`.txt`)
+		│     └── ocr_coords -> OCR results with coordinates (x, y) (`.txt`) and json files
+
 	
 <b> Step 2 - Configure settings for the program </b>
 
 Configure theS3 bucket and other settings for the program
-Go to directory main/EulerEye-master3/src/constants.py and change name of the S3 bucket and folder to new bucket/folder created in previous step
+
+1. Go to directory main/EulerEye-master3/src/constants.py and change name of the S3 bucket and folder to new bucket/folder created in previous step
      
         S3_BUCKET_NAME = 'S3xxxx'
 	S3_RAW_IMAGE_FOLDER = 'S3xxxx/input/'
 	TEXTRACT_LIMIT_SIZE = 10485760
 	FCN_MODEL = 'last_20.pth.tar'`
 
-
+2 Go to directory main/EulerEye-master3"/runscript and change name of the buckets  line 4-7
+	 echo $1
+	 export AWS_DEFAULT_REGION=us-east-1
+	 python3 /home/ec2-user/EulerEye-master3/src/pipeline.py --img $1 --root /home/ec2-user/EulerEye-master3 --coords 2
+	 -->  aws s3 cp /home/ec2-user/EulerEye-master3/output/ocr_plain_text/$2 s3://ancestory-gap/output/ocr_plain_text/$2
+	 -->  aws s3 cp /home/ec2-user/EulerEye-master3/output/ocr_coords/$2 s3://ancestory-gap/output/ocr_coords/$2
+	 -->   >aws s3 cp /home/ec2-user/EulerEye-master3/output/ocr_coords/$3 s3://ancestory-gap/output/ocr_coords/$3
+	 
 <b> Step 3 -  Build the docker container and load to ECR </b>
 Go to file main/docker_utils/build  - change name of the application
 Go to file main/docker_utils/load_ecr  - chanage the name of AWS account and Image
@@ -46,6 +59,7 @@ Go to file main/docker_utils/load_ecr  - chanage the name of AWS account and Ima
 
 
 <b> Step 4 -  Create the Fargate tasks and ECS </b>
+
 Go to AWS Console and register task that points to container uploaded in previous step
 
 Create a new Cluster and configure Service to point to the task
@@ -64,14 +78,13 @@ Create a new lambda function that will be triggered when a new file is uploaded 
 	import random
 	import time
 
-	client = boto3.client('ecs')
 	cluster_name = << Your Fargate Cluster >>
 	task_definition = << Your Task >>
 	container_name = << Your container >>
 	subnet_name = << Your subnet name >>
 	security_group =  <<Your secuirty group>>
 
-
+	client = boto3.client('ecs')
 
 	def lambda_handler(event, context):
 	    try:
