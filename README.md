@@ -43,7 +43,6 @@ import random
 import time
 
 client = boto3.client('ecs')
-""" Change the value of following 5 variables """
 cluster_name = << Your Fargate Cluster >>
 task_definition = << Your Task >>
 container_name = << Your container >>
