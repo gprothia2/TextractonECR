@@ -45,9 +45,9 @@ Go to directory main/EulerEye-master3/src/constants.py and change name of the S3
 Go to file main/docker_utils/build  - change name of the application
 Go to file main/docker_utils/load_ecr  - chanage the name of AWS account and Image
 
-Execute "sh build" - this will build the docer image locally
+	Execute "sh build" - this will build the docer image locally
 
-Execurte "Sh load_ecr" - this will load the dociker image to AWS ECR
+	Execurte "Sh load_ecr" - this will load the dociker image to AWS ECR
 
 
 
