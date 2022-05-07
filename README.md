@@ -22,14 +22,8 @@ Key Services used
   
 S3xxxx
   input 
-      	0001.png
-     	0002...N.png
   output 
-	ocr_plain_text -> plain OCR results as text file. (`.txt`)
-	ocr_coords -> OCR results with coordinates (x, y) (`.txt`) and json files
-
-
-
+	
 <b> Step 2 - Configure settings for the program </b>
 
 Configure theS3 bucket and other settings for the program
