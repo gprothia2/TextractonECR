@@ -48,15 +48,22 @@ Go to file main/docker_utils/load_ecr  - chanage the name of AWS account and Ima
 	Execute "sh build" - this will build the docer image locally
 
 	Execurte "Sh load_ecr" - this will load the dociker image to AWS ECR
+	
+
+
+<b> Step 4 -  Create the Fargate tasks and ECS </b>
+Go to AWS Console and register task that points to container uploaded in previous step
+
+Create a new Cluster and configure Service to point to the task
 
 
 
-<b>Step 2. Create the Lambda function </b>
+<b>Step 5. Create the Lambda function </b>
 
 Create a new lambda function that will be triggered when a new file is uploaded to S3 bucket created inprevious Step
-  - Ensure that Lambda role has access to all resources like  S3, Cloudwatch etc
-  - Set the Trigger for Lambda function as S3 bucket and folder input created in previous step 
-  - Please use the lambda code pasted below and change the  variables 
+   1. Ensure that Lambda role has access to all resources like  S3, Cloudwatch etc
+   2. Set the Trigger for Lambda function as S3 bucket and folder input created in previous step 
+   3. Please use the lambda code pasted below and change the  variables 
 
 	import boto3
 	import json 
