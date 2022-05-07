@@ -21,12 +21,12 @@ Key Services used
  Create a new bucket s3://S3xxxx and following folder structure
   
 S3xxxx
-├── input/ 
-│     └──  0001.png
-│     └──  0002...N.png
-├── output/ 
-│     ├── ocr_plain_text -> plain OCR results as text file. (`.txt`)
-│     └── ocr_coords -> OCR results with coordinates (x, y) (`.txt`) and json files
+  input/ 
+      	0001.png
+     	0002...N.png
+  output/ 
+	ocr_plain_text -> plain OCR results as text file. (`.txt`)
+	ocr_coords -> OCR results with coordinates (x, y) (`.txt`) and json files
 
 
 
@@ -43,7 +43,7 @@ import random
 import time
 
 client = boto3.client('ecs')
-# CHange value of following 5 variable
+""" Change the value of following 5 variables """
 cluster_name = << Your Fargate Cluster >>
 task_definition = << Your Task >>
 container_name = << Your container >>
