@@ -40,7 +40,7 @@ Configure theS3 bucket and other settings for the program
 	TEXTRACT_LIMIT_SIZE = 10485760
 	FCN_MODEL = 'last_20.pth.tar'
 
-- Go to directory main/EulerEye-master3"/runscript and change name of the bucket  
+- Go to directory main/EulerEye-master3/runscript and change name of the bucket  in Line 3 
 
 	 echo $1
 	 export AWS_DEFAULT_REGION=us-east-1
@@ -53,8 +53,9 @@ Configure theS3 bucket and other settings for the program
 	 
 <b> Step 3 -  Build the docker container and load to ECR </b>
 
-1. Go to file main/docker_utils/build  - change name of the application
-2. Go to file main/docker_utils/load_ecr  - chanage the name of AWS account and Image
+- Go to file main/docker_utils/build  - change name of the application
+
+- Go to file main/docker_utils/load_ecr  - chanage the name of AWS account and Image
 
 	Execute "sh build" - this will build the docer image locally
 
@@ -64,18 +65,18 @@ Configure theS3 bucket and other settings for the program
 
 <b> Step 4 -  Create the Fargate tasks and ECS </b>
 
-1. Go to AWS Console and register task that points to container uploaded in previous step
+ - Go to AWS Console and register task that points to container uploaded in previous step
 
-2. Create a new Cluster and configure Service to point to the task
+ - Create a new Cluster and configure Service to point to the task
 
 
 
 <b>Step 5. Create the Lambda function </b>
 
 Create a new lambda function that will be triggered when a new file is uploaded to S3 bucket created inprevious Step
-   1. Ensure that Lambda role has access to all resources like  S3, Cloudwatch etc
-   2. Set the Trigger for Lambda function as S3 bucket and folder input created in previous step 
-   3. Please use the lambda code pasted below and change the  variables 
+   - Ensure that Lambda role has access to all resources like  S3, Cloudwatch etc
+   - Set the Trigger for Lambda function as S3 bucket and folder input created in previous step 
+   - Please use the lambda code pasted below and change the  variables 
 
 	import boto3
 	import json 
