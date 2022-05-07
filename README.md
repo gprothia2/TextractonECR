@@ -16,7 +16,7 @@ Key Services used
 
 ### Steps to setup the application
 
-<b>Step 1. Create a S3 bucket </b>
+<b>Step 1 -  Create a S3 bucket </b>
 
  Create a new bucket s3://S3xxxx and following folder structure
   
@@ -30,10 +30,10 @@ S3xxxx
 
 
 
-<b> Step 2 . Configure theS3 bucket and other settings for the program </b>
+<b> Step 2 - Configure settings for the program </b>
 
 Configure theS3 bucket and other settings for the program
-Go to directory EulerEye-master3/src/constants.py and change name of the S3 bucket and folder to new bucket/folder created in previous step
+Go to directory main/EulerEye-master3/src/constants.py and change name of the S3 bucket and folder to new bucket/folder created in previous step
      
         S3_BUCKET_NAME = 'S3xxxx'
 	S3_RAW_IMAGE_FOLDER = 'S3xxxx/input/'
@@ -41,7 +41,14 @@ Go to directory EulerEye-master3/src/constants.py and change name of the S3 buck
 	FCN_MODEL = 'last_20.pth.tar'`
 
 
-<b> Step 3 . Configure theS3 bucket and other settings for the program </b>
+<b> Step 3 -  Build the docker container and load to ECR </b>
+Go to file main/docker_utils/build  - change name of the application
+Go to file main/docker_utils/load_ecr  - chanage the name of AWS account and Image
+
+Execute "sh build" - this will build the docer image locally
+
+Execurte "Sh load_ecr" - this will load the dociker image to AWS ECR
+
 
 
 <b>Step 2. Create the Lambda function </b>
