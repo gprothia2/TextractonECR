@@ -1,4 +1,4 @@
-# Running Fargate tasks to extract data from image filesusing textract
+# Running Fargate tasks to extract data from image files using textract
 
 This project helps you extract data from image files containing newpaper clippings. The process contains pre-processing step to split the newspaper page into multiple sections and then extract the text using  Textract
 
@@ -16,28 +16,92 @@ Key Services used
 
 ### Steps to setup the application
 
-<b>Step 1. Create</b>
+<b>Step 1. Create a S3 bucket </b>
 
-Go to data folder. There are 2 files - users.txt and listing.txt. Upload these files to S3 bucket under separate prefixes. For users.tx data name the   prefix users and for listings.txt name the prefix as listing
+ Create a new bucket s3://S3xxxx and following folder structure
+  
+S3xxxx
+├── input/ 
+│     └──  0001.png
+│     └──  0002...N.png
+├── output/ 
+│     ├── ocr_plain_text -> plain OCR results as text file. (`.txt`)
+│     └── ocr_coords -> OCR results with coordinates (x, y) (`.txt`) and json files
 
-<b>Step 2. Create the tables </b>
 
-Go to folder ddl, copy the code in script table.sql and run it in Athena console. This will create table users and listings. Ensure that you change the name of the bucket to point to bucket where you have downloaded the data before running the script.
 
-LOCATION
-  's3://<<bucket_name>>/users/'
+<b>Step 2. Create the Lambda function </b>
 
-<b>Step 3. Create the views </b>
+Create a new lambda function that will be triggered when a new file is uploaded to S3 bucket created inprevious Step
+  - Ensure that Lambda role has access to all resources like  S3, Cloudwatch etc
+  - Set the Trigger for Lambda function as S3 created in previous step 
+  - Please use the lambda code pasteed below and change the  variables 
 
-Got to folder ddl, copy the code in script view.sql and run in in Athena console. This will create views that will be referenced in scripts that will replicate data.
-Before executing the view scripts ,review the script for creating replication_scale_v. This controls the scale of replication. Default value is 10 to replicate the data 10x. You can modiy to increase/decrease it as per your requirement
+import boto3
+import json 
+import random
+import time
 
-	CREATE OR REPLACE VIEW "replication_scale_v" AS
-	SELECT x
-	FROM UNNEST("sequence"(1, 10)) t (x)
+client = boto3.client('ecs')
+# CHange value of following 5 variable
+cluster_name = << Your Fargate Cluster >>
+task_definition = << Your Task >>
+container_name = << Your container >>
+subnet_name = << Your subnet name >>
+security_group =  <<Your secuirty group>>
+  
+  
 
-	Change the value of 2nd parameter in sequence function from default value '10' to any other desired value.
+def lambda_handler(event, context):
+    try:
+        
+   
+        lambda_message = event['Records'][0]
+        bucket = lambda_message['s3']['bucket']['name']
+        key = lambda_message['s3']['object']['key']
+        print('KEY:'+key)
+        
+        img_file =  key.split('/')[-1]
+        img_file2 = img_file.split('.')[0]+'.txt'
+        img_file3 = img_file.split('.')[0]+'.json'
+        
+        
+        response = client.run_task(
+            cluster=cluster_name,
+            launchType = 'FARGATE',
+            taskDefinition=task_definition,
+            count = 1,
+            platformVersion='LATEST',
+            overrides={
+                'containerOverrides':[{
+                    'name': container_name,
+                    'command':[img_file,img_file2,img_file3]
+                }],
+            },
+            networkConfiguration={
+                'awsvpcConfiguration': {
+                    'subnets': [
+                        subnet_name
+                    ],
+                    'securityGroups': [
+                        security_group,
+                    ],
+                    'assignPublicIp': 'ENABLED'
+                }
+            })
 
-<b>Step 4. Run the Replication scripts </b>
+        print(response)
 
-Got to folder dml, copy the code in script dml.sql and execute it in Athena console. This will replicate the data in tables users and listings.
+        return {
+            'statusCode': 200,
+            'body': "OK"
+        }
+    except Exception as e:
+        print(e)
+
+        return {
+            'statusCode': 500,
+            'body': str(e)
+        }    
+	
+	
