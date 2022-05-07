@@ -59,7 +59,7 @@ Configure theS3 bucket and other settings for the program
 
 		Execute "sh build" - this will build the docer image locally
 
-		Execute "Sh load_ecr" - this will load the dociker image to AWS ECR
+		Execute "sh load_ecr" - this will load the dociker image to AWS ECR
 	
 
 
