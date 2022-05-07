@@ -21,21 +21,35 @@ Key Services used
  Create a new bucket s3://S3xxxx and following folder structure
   
 S3xxxx
-  input/ 
+  input 
       	0001.png
      	0002...N.png
-  output/ 
+  output 
 	ocr_plain_text -> plain OCR results as text file. (`.txt`)
 	ocr_coords -> OCR results with coordinates (x, y) (`.txt`) and json files
 
+
+
+<b> Step 2 . Configure theS3 bucket and other settings for the program </b>
+
+Configure theS3 bucket and other settings for the program
+Go to directory EulerEye-master3/src/constants.py and change name of the S3 bucket and folder to new bucket/folder created in previous step
+     
+        S3_BUCKET_NAME = 'S3xxxx'
+	S3_RAW_IMAGE_FOLDER = 'S3xxxx/input/'
+	TEXTRACT_LIMIT_SIZE = 10485760
+	FCN_MODEL = 'last_20.pth.tar'`
+
+
+<b> Step 3 . Configure theS3 bucket and other settings for the program </b>
 
 
 <b>Step 2. Create the Lambda function </b>
 
 Create a new lambda function that will be triggered when a new file is uploaded to S3 bucket created inprevious Step
   - Ensure that Lambda role has access to all resources like  S3, Cloudwatch etc
-  - Set the Trigger for Lambda function as S3 created in previous step 
-  - Please use the lambda code pasteed below and change the  variables 
+  - Set the Trigger for Lambda function as S3 bucket and folder input created in previous step 
+  - Please use the lambda code pasted below and change the  variables 
 
 import boto3
 import json 
