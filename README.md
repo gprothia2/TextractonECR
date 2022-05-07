@@ -33,14 +33,14 @@ Key Services used
 
 Configure theS3 bucket and other settings for the program
 
-1. Go to directory main/EulerEye-master3/src/constants.py and change name of the S3 bucket and folder to new bucket/folder created in previous step
+- Go to directory main/EulerEye-master3/src/constants.py and change name of the S3 bucket and folder to new bucket/folder created in previous step
      
         S3_BUCKET_NAME = 'S3xxxx'
 	S3_RAW_IMAGE_FOLDER = 'S3xxxx/input/'
 	TEXTRACT_LIMIT_SIZE = 10485760
 	FCN_MODEL = 'last_20.pth.tar'
 
-2. Go to directory main/EulerEye-master3"/runscript and change name of the bucket  
+- Go to directory main/EulerEye-master3"/runscript and change name of the bucket  
 
 	 echo $1
 	 export AWS_DEFAULT_REGION=us-east-1
